@@ -1,10 +1,9 @@
-name: Build resukisu Kernel (Nokia DRG - Fork Source)
+name: Build bakasu Kernel (Nokia DRG - Fork Source)
 
 on:
   workflow_dispatch:
 
 env:
-  # ใช้ Kernel Source จากคลังที่คุณ Fork มา
   KERNEL_SOURCE: "https://github.com/droidtvdroidtv2/android_kernel_nokia_sdm660"
   KERNEL_BRANCH: "lineage-22.1"
   DEFCONFIG: "nokia_defconfig"
@@ -33,21 +32,18 @@ jobs:
         run: |
           git clone --depth=1 -b ${{ env.KERNEL_BRANCH }} ${{ env.KERNEL_SOURCE }} kernel-source
 
-      - name: Inject resukisu Source
+      - name: Inject bakasu Source
         run: |
           cd kernel-source
-          # ดึงสคริปต์ติดตั้ง resukisu มาฝังในโครงสร้าง Kernel
-          curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
+          curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash
 
       - name: Compile Kernel
         run: |
           cd kernel-source
           export PATH="$HOME/clang/bin:$PATH"
           
-          # เริ่มต้นด้วยไฟล์ Config ที่กำหนดไว้
           make O=out ARCH=${{ env.ARCH }} ${{ env.DEFCONFIG }}
           
-          # สั่งบิลด์ด้วย Clang
           make -j$(nproc --all) O=out ARCH=arm64 \
             CC=clang \
             CROSS_COMPILE=aarch64-linux-gnu- \
@@ -57,7 +53,6 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/osm0sis/AnyKernel3 AnyKernel3
           
-          # ระบุข้อมูลอุปกรณ์เป็นของ Nokia DRG
           sed -i 's/device.name1=maguro/device.name1=DRG/' AnyKernel3/anykernel.sh
           sed -i 's/device.name2=toro/device.name2=DRG_sprout/' AnyKernel3/anykernel.sh
           
@@ -65,10 +60,10 @@ jobs:
           find kernel-source/out/arch/arm64/boot -name "Image.gz-dtb" -exec cp {} AnyKernel3/ \; || find kernel-source/out/arch/arm64/boot -name "Image*" -exec cp {} AnyKernel3/ \;
           
           cd AnyKernel3
-          zip -r9 ../resukisu-Nokia-DRG-Kernel.zip * -x .git README.md *placeholder
+          zip -r9 ../bakasu-Nokia-DRG-Kernel.zip * -x .git README.md *placeholder
 
       - name: Upload Finished Zip
         uses: actions/upload-artifact@v4
         with:
-          name: resukisu-Nokia-DRG-Kernel
-          path: resukisu-Nokia-DRG-Kernel.zip
+          name: bakasu-Nokia-DRG-Kernel
+          path: bakasu-Nokia-DRG-Kernel.zip
