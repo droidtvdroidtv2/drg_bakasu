@@ -35,7 +35,7 @@ jobs:
       - name: Inject bakasu Source
         run: |
           cd kernel-source
-          curl -LSs "https://raw.githubusercontent.com/RexxSU/KernelSU-legacy/refs/heads/master/kernel/setup.sh" | bash
+          curl -LSs "https://raw.githubusercontent.com/RexxSU/KernelSU-legacy/refs/heads/master/kernel/setup.sh" | bash -
 
       - name: Compile Kernel
         run: |
