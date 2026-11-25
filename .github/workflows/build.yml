@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  KERNEL_SOURCE: "https://github.com/droidtvdroidtv2/android_kernel_nokia_sdm660"
-  KERNEL_BRANCH: "spaghetti_rksu"
+  KERNEL_SOURCE: "https://github.com/droidtvdroidtv2/kernel_nokia_sdm660"
+  KERNEL_BRANCH: "frico-release"
   DEFCONFIG: "nokia_defconfig"
   ARCH: "arm64"
   CLANG_URL: "https://github.com/kdrag0n/proton-clang"
@@ -35,7 +35,7 @@ jobs:
       - name: Inject bakasu Source
         run: |
           cd kernel-source
-          curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/refs/heads/master/kernel/setup.sh" | bash -
+          curl -LSs "https://raw.githubusercontent.com/Baka-SU/BakaSU/main/kernel/setup.sh" | bash
 
       - name: Compile Kernel
         run: |
